@@ -259,7 +259,7 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-client</artifactId>
-      <version>9.0.2</version>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 <!--
