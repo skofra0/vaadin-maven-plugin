@@ -46,11 +46,9 @@ import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SingleTargetSourceMapping;
 import org.codehaus.plexus.util.StringUtils;
 
-/*
 import com.vaadin.pro.licensechecker.BuildType;
 import com.vaadin.pro.licensechecker.LicenseChecker;
 import com.vaadin.pro.licensechecker.LicenseException;
-*/
 import com.vaadin.wscdn.client.Connection;
 import com.vaadin.wscdn.client.WidgetSetRequest;
 
@@ -434,8 +432,8 @@ public class CompileMojo
             }
         }
 
-        /*
-        MOD-DEEM missing LicenseChecker depts 
+        /*  MOD-DEEM missing LicenseChecker depts  */
+       
         // Always check for Vaadin license
         try {
             LicenseChecker.checkLicense(FRAMEWORK_PRODUCT, vaadinVersion, BuildType.DEVELOPMENT);
@@ -447,7 +445,7 @@ public class CompileMojo
             "license checker. For more information, see " + 
             "https://vaadin.com/licensing-faq-and-troubleshooting");
         }
-        */
+        
         if ( skip || "pom".equals( getProject().getPackaging() ) || "cdn".equals(widgetsetMode) )
         {
             getLog().info( "GWT compilation is skipped" );
