@@ -26,6 +26,7 @@ import java.util.Vector;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
@@ -43,9 +44,7 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
  * @author <a href="mailto:vlads@pyx4j.com">Vlad Skarzhevskyy</a>
  */
 @Mojo(name = "source-jar", defaultPhase = LifecyclePhase.PACKAGE, threadSafe = true)
-public class GwtSourcesJarMojo
-    extends GwtResourcesBaseMojo
-{
+public class GwtSourcesJarMojo extends GwtResourcesBaseMojo {
 
     /**
      * Name of the generated JAR.
@@ -69,13 +68,15 @@ public class GwtSourcesJarMojo
     @Parameter
     private final MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
 
+
+    @Parameter(defaultValue = "${session}")
+    private MavenSession session;
     /**
      * {@inheritDoc}
      * 
      * @see org.apache.maven.plugin.Mojo#execute()
      */
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
+    public void execute() throws MojoExecutionException, MojoFailureException
     {
         File jarFile = new File( outputDirectory, finalName + ".jar" );
         File origJarFile = new File( outputDirectory, finalName + "-b4gwt.jar" );
@@ -104,7 +105,7 @@ public class GwtSourcesJarMojo
         {
 
             // Avoid annoying messages in log "com/package/Ccc.java already added, skipping"
-            List<String> jarExcludes = new Vector<String>();
+            List<String> jarExcludes = new Vector<>();
 
             // Add Sources first since they may already be present in jar from previous run and changed.
             for ( ResourceFile file : files )
@@ -116,7 +117,7 @@ public class GwtSourcesJarMojo
             // Add the context of original jar excluding resources that we just added base on GWT descriptors
             jarArchiver.addArchivedFileSet( origJarFile, null, jarExcludes.toArray( new String[jarExcludes.size()] ) );
 
-            archiver.createArchive( getProject(), archive );
+            archiver.createArchive( session, getProject(),  archive);
         }
         catch ( Exception e )
         {

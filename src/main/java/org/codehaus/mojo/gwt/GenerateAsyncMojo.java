@@ -44,12 +44,11 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
-import com.thoughtworks.qdox.model.Annotation;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
-import com.thoughtworks.qdox.model.Type;
 
 /**
  * Goal which generate Async interface.
@@ -138,7 +137,7 @@ public class GenerateAsyncMojo
             encoding = Charset.defaultCharset().name();
         }
 
-        JavaDocBuilder builder = createJavaDocBuilder();
+        JavaProjectBuilder builder = createJavaDocBuilder();
 
         List<String> sourceRoots = getProject().getCompileSourceRoots();
         for ( String sourceRoot : sourceRoots )
@@ -163,7 +162,7 @@ public class GenerateAsyncMojo
      * @return true if some file have been generated
      * @throws Exception generation failure
      */
-    private boolean scanAndGenerateAsync( File sourceRoot, JavaDocBuilder builder )
+    private boolean scanAndGenerateAsync( File sourceRoot, JavaProjectBuilder builder )
         throws Exception
     {
         Scanner scanner = buildContext.newScanner( sourceRoot );
@@ -238,9 +237,8 @@ public class GenerateAsyncMojo
         writer.println( "public interface " + className + "Async" );
         writer.println( "{" );
 
-        JavaMethod[] methods = clazz.getMethods( true );
-        for ( JavaMethod method : methods )
-        {
+        List<JavaMethod> methods = clazz.getMethods( true );
+        for ( JavaMethod method : methods )  {
             boolean deprecated = isDeprecated( method );
 
             writer.println( "" );
@@ -260,47 +258,46 @@ public class GenerateAsyncMojo
             {
                 writer.print( "    void " + method.getName() + "( " );
             }
-            JavaParameter[] params = method.getParameters();
-            for ( int j = 0; j < params.length; j++ )
-            {
-                JavaParameter param = params[j];
+            List<JavaParameter> params = method.getParameters();
+            for ( int j = 0; j < params.size(); j++ ) {
+                JavaParameter param = params.get(j);
                 if ( j > 0 )
                 {
                     writer.print( ", " );
                 }
 
-                writer.print( method.getParameterTypes( true )[j].getGenericValue() );
-                if ( param.getType().getDimensions() != method.getParameterTypes( true )[j].getDimensions() )
+                writer.print( method.getParameterTypes( true ).get(j).getGenericValue() );
+                if ( param.getJavaClass().getDimensions() != method.getParameters().get(j).getJavaClass().getDimensions() )
                 {
-                    for ( int dimensions = 0; dimensions < param.getType().getDimensions(); dimensions++ )
+                    for ( int dimensions = 0; dimensions < param.getJavaClass().getDimensions(); dimensions++ )
                     {
                         writer.print( "[]" );
                     }
                 }
                 writer.print( " " + param.getName() );
             }
-            if ( params.length > 0 )
+            if ( params.size() > 0 )
             {
                 writer.print( ", " );
             }
 
-            if ( method.getReturnType().isVoid() )
+            if ( method.getReturns().isVoid() )
             {
                 writer.println( "AsyncCallback<Void> callback );" );
             }
-            else if ( method.getReturnType().isPrimitive() )
+            else if ( method.getReturns().isPrimitive() )
             {
                 String primitive = method.getReturnType().getGenericValue();
                 writer.println( "AsyncCallback<" + WRAPPERS.get( primitive ) + "> callback );" );
             }
             else
             {
-                Type returnType = method.getReturnType( true );
+            	JavaClass returnType = method.getReturns(  );
                 String type = returnType.getGenericValue();
 
-                if ( method.getReturnType().getDimensions() != method.getReturnType( true ).getDimensions() )
+                if ( method.getReturns().getDimensions() != method.getReturns( ).getDimensions() )
                 {
-                    for ( int dimensions = 0; dimensions < method.getReturnType().getDimensions(); dimensions++ )
+                    for ( int dimensions = 0; dimensions < method.getReturns().getDimensions(); dimensions++ )
                     {
                         type += "[]";
                     }
@@ -348,15 +345,17 @@ public class GenerateAsyncMojo
         return javaClass.isInterface() && javaClass.isPublic() && javaClass.isA( REMOTE_SERVICE_INTERFACE );
     }
 
-    private JavaDocBuilder createJavaDocBuilder()
+    private JavaProjectBuilder createJavaDocBuilder()
         throws MojoExecutionException
     {
-        JavaDocBuilder builder = new JavaDocBuilder();
+    	JavaProjectBuilder builder = new JavaProjectBuilder();
         builder.setEncoding( encoding );
-        builder.getClassLibrary().addClassLoader( getProjectClassLoader() );
+        builder.addClassLoader(getProjectClassLoader());
+       // builder.getClassLibrary().addClassLoader( getProjectClassLoader() );
         for ( String sourceRoot : getProject().getCompileSourceRoots() )
         {
-            builder.getClassLibrary().addSourceFolder( new File( sourceRoot ) );
+        	builder.addSourceFolder(new File( sourceRoot ) );
+            // builder.getClassLibrary().addSourceFolder( new File( sourceRoot ) );
         }
         return builder;
     }
@@ -377,7 +376,7 @@ public class GenerateAsyncMojo
         if ( method == null )
             return false;
 
-        for ( Annotation annotation : method.getAnnotations() )
+        for ( JavaAnnotation annotation : method.getAnnotations() )
         {
             if ( "java.lang.Deprecated".equals( annotation.getType().getFullyQualifiedName() ) )
             {
@@ -392,7 +391,7 @@ public class GenerateAsyncMojo
     {
         if ( clazz != null && clazz.getAnnotations() != null )
         {
-            for ( Annotation annotation : clazz.getAnnotations() )
+            for ( JavaAnnotation annotation : clazz.getAnnotations() )
             {
                 getLog().debug( "annotation found on service interface " + annotation );
                 if ( annotation.getType().getValue().equals( "com.google.gwt.user.client.rpc.RemoteServiceRelativePath" ) )
