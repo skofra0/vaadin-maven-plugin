@@ -22,46 +22,35 @@ package org.codehaus.mojo.gwt.servlets;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class HelloRemoteServlet
-    extends RemoteServiceServlet implements HelloRemoteService
-{
-    public void init()
-        throws ServletException
-    {
-        System.out.println( "HelloRemoteServlet started" );
-    }
+public class HelloRemoteServlet extends RemoteServiceServlet implements HelloRemoteService {
+	public void init()  {
+		System.out.println("HelloRemoteServlet started");
+	}
 
+	public void exit() {
+	}
 
-    public void exit()
-    {
-    }
-
-    public Collection<Integer> returnsGenerics( List<String> values )
-    {
-        return null;
-    }
+	public Collection<Integer> returnsGenerics(List<String> values) {
+		return null;
+	}
 
 	@Override
-    public int returnsPrimitive( String[] values )
-    {
-        return 0;
-    }
+	public int returnsPrimitive(String[] values) {
+		return 0;
+	}
 
 	@Override
-    public void returnsVoid( String value )
-    {
+	public void returnsVoid(String value) {
 
-    }
+	}
 
 	@Override
-    public String[] returnsArray( String[] values )
-    {
-        return new String[0];
-    }
-
+	public String[] returnsArray(String[] values) {
+		return new String[0];
+	}
 
 }

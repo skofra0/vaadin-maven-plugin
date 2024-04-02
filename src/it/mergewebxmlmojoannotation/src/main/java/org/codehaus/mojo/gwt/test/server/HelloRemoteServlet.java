@@ -22,7 +22,7 @@ package org.codehaus.mojo.gwt.test.server;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import org.codehaus.mojo.gwt.test.client.HelloService;
 

@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import org.codehaus.mojo.gwt.test.client.HelloService;
 
