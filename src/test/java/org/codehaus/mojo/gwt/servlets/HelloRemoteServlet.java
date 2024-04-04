@@ -22,8 +22,6 @@ package org.codehaus.mojo.gwt.servlets;
 import java.util.Collection;
 import java.util.List;
 
-import jakarta.servlet.ServletException;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class HelloRemoteServlet extends RemoteServiceServlet implements HelloRemoteService {

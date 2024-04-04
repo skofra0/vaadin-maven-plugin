@@ -58,7 +58,7 @@
 		<url>https://github.com/vaadin/maven-plugin/issues</url>
 	</issueManagement>
 	<properties>
-		<java.version>8</java.version>
+		<java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 		<vaadin.version>${project.version}</vaadin.version>
@@ -280,14 +280,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		
-		<!--
-    <dependency>
-      <groupId>com.vaadin</groupId>
-		<artifactId>vaadin-client-compiler</artifactId>
-		<version>${vaadin.version}</version>
-    </dependency>
--->
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>license-checker</artifactId>
@@ -726,7 +718,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>animal-sniffer-maven-plugin</artifactId>
-				<version>1.11</version>
 				<configuration>
 					<signature>
 						<groupId>org.codehaus.mojo.signature</groupId>
