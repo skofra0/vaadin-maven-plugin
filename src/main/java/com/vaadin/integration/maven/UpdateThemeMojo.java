@@ -15,7 +15,7 @@ import org.codehaus.mojo.gwt.shell.JavaCommandException;
  * This goal is linked to phase generate-sources to make sure it is executed
  * before compile-theme.
  */
-@Mojo(name = "update-theme", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "update-theme", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe=true)
 public class UpdateThemeMojo extends AbstractThemeMojo {
     public static final String THEME_UPDATE_CLASS = "com.vaadin.server.themeutils.SASSAddonImportFileCreator";
 

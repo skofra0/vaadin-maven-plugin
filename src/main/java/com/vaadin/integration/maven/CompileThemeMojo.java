@@ -13,7 +13,7 @@ import org.codehaus.mojo.gwt.shell.JavaCommandException;
 /**
  * Updates Vaadin themes based on addons containing themes on the classpath.
  */
-@Mojo(name = "compile-theme", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "compile-theme", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe=true)
 public class CompileThemeMojo extends AbstractThemeMojo {
     public static final String THEME_COMPILE_CLASS = "com.vaadin.sass.SassCompiler";
 
@@ -55,8 +55,8 @@ public class CompileThemeMojo extends AbstractThemeMojo {
 
         File themeDir = configureThemeClasspath(cmd, theme);
 
-        File scssFile = new File(themeDir, "styles.scss");
-        File cssFile = new File(themeDir, "styles.css");
+        File scssFile = new File(themeDir, "vaadin-styles.scss");
+        File cssFile = new File(themeDir, "vaadin-styles.css");
 
         cmd.arg(scssFile.getAbsolutePath());
         cmd.arg(cssFile.getAbsolutePath());

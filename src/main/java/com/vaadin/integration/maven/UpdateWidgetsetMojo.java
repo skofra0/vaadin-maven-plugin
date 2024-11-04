@@ -34,7 +34,7 @@ import com.vaadin.wscdn.client.WidgetSetResponse;
  * It is assumed that the project does not directly contain other GWT modules.
  * In part adapted from gwt-maven-plugin {@link CompileMojo}.
  */
-@Mojo(name = "update-widgetset", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "update-widgetset", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe=true)
 public class UpdateWidgetsetMojo extends AbstractGwtShellMojo {
     private static final String WSCDN_WIDGETSET_CLASS_NAME = "AppWidgetset";
 
